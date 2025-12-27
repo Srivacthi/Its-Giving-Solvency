@@ -1,1 +1,1 @@
-
+Welcome to the budget management app where you can plan your yearly and monthly payments, rent, investments, debt, and more!
