@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Budget Planner</title>
+  <style>
+    body {
+      background: #f2e9ec;
+      font-family: "Courier New", monospace;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .window {
+      width: 900px;
+      background: #f8eff2;
+      border: 2px solid #b8aeb3;
+      border-radius: 6px;
+      box-shadow: 4px 4px 0 #b8aeb3;
+    }
+
+    .title-bar {
+      background: #e6dfe5;
+      padding: 10px;
+      text-align: center;
+      font-size: 22px;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      right: 12px;
+      top: 6px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .addons {
+      background: #eee4e8;
+      padding: 15px;
+      border: 1px solid #b8aeb3;
+    }
+
+    .addons h3 {
+      margin-top: 0;
+    }
+
+    .addon-btn {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      background: #fff;
+      border: 1px solid #b8aeb3;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .main {
+      padding: 10px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 180px 120px 120px 1fr;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    input {
+      padding: 6px;
+      border: 1px solid #b8aeb3;
+      font-family: inherit;
+    }
+
+    .header {
+      font-weight: bold;
+      margin: 15px 0 10px;
+    }
+
+    .ai {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .ai-box {
+      background: #f3b8b2;
+      padding: 10px 20px;
+      border: 1px solid #b86b66;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="window">
+    <div class="title-bar">
+      Budget Planner
+      <span class="close">×</span>
+    </div>
+
+    <div class="content">
+      <div class="addons">
+        <h3>Add-ins</h3>
+        <button class="addon-btn">🍕 Food</button>
+        <button class="addon-btn">🏠 Rent</button>
+        <button class="addon-btn">🎬 Monthly subscriptions</button>
+        <button class="addon-btn">💧 Utilities</button>
+        <button class="addon-btn">🚗 Car expenses</button>
+        <button class="addon-btn">💸 401k/RothIRA</button>
+      </div>
+
+      <div class="main">
+        <div class="row">
+          <div>Enter Gross Pay:</div>
+          <input value="$100,000" />
+        </div>
+
+        <div class="header">Monthly Expenses</div>
+
+        <div class="row">
+          <div>Monthly Net Income:</div>
+          <input value="$6,000" />
+        </div>
+
+        <div class="row">
+          <div>🍕 Food</div>
+          <div>—</div>
+          <input value="$1,000" />
+          <input value="Hello Fresh" />
+        </div>
+
+        <div class="row">
+          <div>🏠 Rent</div>
+          <div>—</div>
+          <input value="$2,500" />
+          <input value="Town house" />
+        </div>
+
+        <div class="row">
+          <div>💸 401k/RothIRA</div>
+          <div>—</div>
+          <input value="$1,000" />
+          <input value="Maxed out" />
+        </div>
+
+        <div class="row">
+          <div>🚗 Car expenses</div>
+          <div>—</div>
+          <input value="$1,750" />
+          <input value="Honda" />
+        </div>
+
+        <div class="ai">
+          <div>AI Suggestion:<br/>Find a smaller home</div>
+          <div class="ai-box">- $250</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
