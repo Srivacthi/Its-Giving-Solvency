@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Budget Planner</title>
+  <style>
+    body {
+      background: #f2e9ec;
+      font-family: "Courier New", monospace;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .window {
+      width: 910px;
+      background: #f8eff2;
+      border: 2px solid #b8aeb3;
+      border-radius: 6px;
+      box-shadow: 4px 4px 0 #b8aeb3;
+    }
+
+    .title-bar {
+      background: #e6dfe5;
+      padding: 10px;
+      text-align: center;
+      font-size: 22px;
+      position: relative;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .addons {
+      background: #eee4e8;
+      padding: 15px;
+      border: 1px solid #b8aeb3;
+    }
+
+    .addon-btn {
+      background: #fff;
+      border: 1px solid #b8aeb3;
+      padding: 8px;
+      margin-bottom: 10px;
+      cursor: grab;
+    }
+
+    .small-padding {
+      padding: 10px;
+    }
+
+    .main {
+      padding: 10px;
+      border: 2px dashed #b8aeb3;
+      min-height: 300px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 250px 120px 120px 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .row-drag {
+      display: grid;
+      grid-template-columns: 180px 50px 100px 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    input {
+      padding: 6px;
+      border: 1px solid #b8aeb3;
+      font-family: inherit;
+    }
+
+    .placeholder {
+      color: #8a7f85;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="window">
+    <div class="title-bar">Budget Planner</div>
+
+    <div class="content">
+      <div class="addons">
+        <h3>Add-ins</h3>
+        <div class="addon-btn" draggable="true" data-name="🍕 Food">🍕 Food</div>
+        <div class="addon-btn" draggable="true" data-name="🏠 Rent">🏠 Rent</div>
+        <div class="addon-btn" draggable="true" data-name="🎬 Monthly subscriptions">🎬 Monthly subscriptions</div>
+        <div class="addon-btn" draggable="true" data-name="💧 Utilities">💧 Utilities</div>
+        <div class="addon-btn" draggable="true" data-name="🚗 Car expenses">🚗 Car expenses</div>
+        <div class="addon-btn" draggable="true" data-name="💸 401k/RothIRA">💸 401k/RothIRA</div>
+      </div>
+
+      <div class="small-padding">
+        <div class="row">
+          <div>Enter Gross Pay:        $</div>
+          <input value="100,000" />
+        </div>
+        <div class="row">
+          <div>Monthly Net Income:     $</div>
+          <input value="6,000" />
+        </div>
+
+        <div class="row-drag" style="font-weight:bold; margin-bottom:8px;">
+            <div>Monthly Expenses</div>
+            <div></div>
+            <div>Monthly Cost</div>
+            <div>Comments</div>
+        </div>
+      <div class="main" id="dropzone" padding = "10px">
+        <div class="placeholder">Drag add-ins here 👇</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const addons = document.querySelectorAll('.addon-btn');
+    const dropzone = document.getElementById('dropzone');
+
+    addons.forEach(addon => {
+      addon.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', addon.dataset.name);
+      });
+    });
+
+    dropzone.addEventListener('dragover', e => {
+      e.preventDefault();
+    });
+
+    dropzone.addEventListener('drop', e => {
+      e.preventDefault();
+      const name = e.dataTransfer.getData('text/plain');
+
+      const row = document.createElement('div');
+      row.className = 'row-drag';
+      row.innerHTML = `
+        <div>${name}</div>
+        <div>— $</div>
+        <input placeholder="1,000" />
+        <input placeholder="Notes" />
+      `;
+
+      dropzone.appendChild(row);
+
+      const placeholder = dropzone.querySelector('.placeholder');
+      if (placeholder) placeholder.remove();
+    });
+  </script>
+</body>
+</html>
