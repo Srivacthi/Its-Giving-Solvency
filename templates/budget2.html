@@ -25,7 +25,6 @@
       padding: 10px;
       text-align: center;
       font-size: 22px;
-      position: relative;
     }
 
     .content {
@@ -61,7 +60,7 @@
 
     .row {
       display: grid;
-      grid-template-columns: 250px 120px 120px 1fr;
+      grid-template-columns: 250px 1fr;
       gap: 10px;
       margin-bottom: 10px;
       align-items: center;
@@ -69,7 +68,7 @@
 
     .row-drag {
       display: grid;
-      grid-template-columns: 185px 45px 120px 1fr;
+      grid-template-columns: 185px 45px 140px 1fr;
       gap: 10px;
       margin-bottom: 10px;
       align-items: center;
@@ -79,12 +78,65 @@
       padding: 6px;
       border: 1px solid #b8aeb3;
       font-family: inherit;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .money-inline {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 140px; 
     }
 
     .placeholder {
       color: #8a7f85;
       margin-bottom: 10px;
     }
+
+  .tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+  margin-left: 6px;
+  color: #1a73e8;
+  font-weight: bold;
+}
+
+.tooltip-box {
+  visibility: hidden;
+  opacity: 0;
+  width: 360px;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #fff;
+  color: #000;
+  border: 1px solid #b8aeb3;
+  box-shadow: 3px 3px 0 #b8aeb3;
+  padding: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  position: absolute;
+  z-index: 10;
+  top: 125%;
+  left: 0;
+  transition: opacity 0.2s ease;
+}
+
+.tooltip:hover .tooltip-box,
+.tooltip .tooltip-box:hover {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 10px;
+}
   </style>
 </head>
 <body>
@@ -104,22 +156,77 @@
 
       <div class="small-padding">
         <div class="row">
-          <div>Enter Gross Pay:        $</div>
-          <input value="100,000" />
+          <div>Enter Gross Pay:</div>
+          <div class="money-inline">
+            <span>$</span>
+            <input value="100,000" />
+          </div>
         </div>
+
         <div class="row">
-          <div>Monthly Net Income:     $</div>
-          <input value="6,000" />
+          <div>
+            Monthly Net Income:
+            <span class="tooltip">ⓘ
+              <div class="tooltip-box">
+                <strong>Monthly Net Income Calculation</strong><br><br>
+
+                <strong>Assumptions</strong><br>
+                • Filing status: <strong>Single</strong><br>
+                • State: <strong>Virginia</strong><br><br>
+
+                <strong>1. Annual Gross Pay</strong><br>
+                Start with your annual salary before any deductions.<br><br>
+
+                <strong>2. Federal Income Tax (2024, Single)</strong><br>
+                Federal tax is <em>marginal</em>. Each portion of income is taxed
+                at its bracket rate:<br><br>
+
+                • 10% on income up to <strong>$11,600</strong><br>
+                • 12% on income from <strong>$11,601 - $47,150</strong><br>
+                • 22% on income from <strong>$47,151 - $100,525</strong><br>
+                • 24% on income from <strong>$100,526 - $191,950</strong><br>
+                • 32% on income from <strong>$191,951 - $243,725</strong><br>
+                • 35% on income from <strong>$243,726 - $609,350</strong><br>
+                • 37% on income above <strong>$609,350</strong><br><br>
+
+                <strong>Standard Deduction</strong><br>
+                Subtract <strong>$14,600</strong> before applying brackets.<br><br>
+
+                <strong>3. Virginia State Income Tax</strong><br>
+                Virginia uses progressive brackets (no standard deduction):<br><br>
+
+                • 2% on first <strong>$3,000</strong><br>
+                • 3% on <strong>$3,001 - $5,000</strong><br>
+                • 5% on <strong>$5,001 - $17,000</strong><br>
+                • 5.75% on income above <strong>$17,000</strong><br><br>
+
+                <strong>4. FICA Payroll Taxes</strong><br>
+                • Social Security: <strong>6.2%</strong> (up to wage cap)<br>
+                • Medicare: <strong>1.45%</strong> (no cap)<br>
+                • Additional Medicare: <strong>0.9%</strong> above $200,000<br><br>
+
+                <strong>5. Monthly Net Income</strong><br>
+                Net Annual Income = Gross - (Federal + VA + FICA - Pre-Tax Deductions)<br>
+                Monthly Net = Net Annual ÷ 12
+              </div>
+            </span>
+          </div>
+          <div class="money-inline">
+            <span>$</span>
+            <input value="6,000" />
+          </div>
         </div>
 
         <div class="row-drag" style="font-weight:bold; margin-bottom:8px;">
-            <div>Monthly Expenses</div>
-            <div></div>
-            <div>Monthly Cost</div>
-            <div>Comments</div>
+          <div>Monthly Expenses</div>
+          <div></div>
+          <div>Monthly Cost</div>
+          <div>Comments</div>
         </div>
-      <div class="main" id="dropzone" padding = "10px">
-        <div class="placeholder">Drag add-ins here 👇</div>
+
+        <div class="main" id="dropzone">
+          <div class="placeholder">Drag add-ins here 👇</div>
+        </div>
       </div>
     </div>
   </div>
@@ -146,8 +253,11 @@
       row.className = 'row-drag';
       row.innerHTML = `
         <div>${name}</div>
-        <div>— $</div>
-        <input placeholder="1,000" />
+        <div></div>
+        <div class="money-inline">
+          <span>$</span>
+          <input placeholder="1,000" />
+        </div>
         <input placeholder="Notes" />
       `;
 
