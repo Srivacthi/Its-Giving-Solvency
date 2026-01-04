@@ -153,6 +153,7 @@
         <div class="addon-btn" draggable="true" data-name="🚗 Car expenses">🚗 Car expenses</div>
         <div class="addon-btn" draggable="true" data-name="💸 401k/RothIRA">💸 401k/RothIRA</div>
         <div class="addon-btn" draggable="true" data-name="🏦 Loan / Mortgage">🏦 Loan / Mortgage</div>
+        <div class="addon-btn" draggable="true" data-name="➕ Custom Expense">➕ Custom Expense</div>
       </div>
 
       <div class="small-padding">
@@ -252,14 +253,24 @@
 
       const row = document.createElement('div');
       row.className = 'row-drag';
+
+      let nameCell;
+      let notesPlaceholder = "Notes";
+
+      if (name.includes("Custom Expense")) {
+        nameCell = `<input placeholder="Expense name" />`;
+      } else {
+        nameCell = `<div>${name}</div>`;
+      }
+
       row.innerHTML = `
-        <div>${name}</div>
+        ${nameCell}
         <div></div>
         <div class="money-inline">
           <span>$</span>
           <input placeholder="1,000" />
         </div>
-        <input placeholder="Notes" />
+        <input placeholder="${notesPlaceholder}" />
       `;
 
       dropzone.appendChild(row);
