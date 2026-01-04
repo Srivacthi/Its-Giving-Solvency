@@ -25,6 +25,22 @@
       padding: 10px;
       text-align: center;
       font-size: 22px;
+      position: relative;
+    }
+
+    .reset-btn {
+      position: absolute;
+      right: 10px;
+      top: 6px;
+      padding: 4px 10px;
+      font-family: inherit;
+      border: 1px solid #b8aeb3;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      background: #eee4e8;
     }
 
     .content {
@@ -86,7 +102,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      width: 140px; 
+      width: 140px;
     }
 
     .placeholder {
@@ -94,54 +110,58 @@
       margin-bottom: 10px;
     }
 
-  .tooltip {
-  position: relative;
-  display: inline-block;
-  cursor: help;
-  margin-left: 6px;
-  color: #1a73e8;
-  font-weight: bold;
-}
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+      margin-left: 6px;
+      color: #1a73e8;
+      font-weight: bold;
+    }
 
-.tooltip-box {
-  visibility: hidden;
-  opacity: 0;
-  width: 360px;
-  max-height: 260px;
-  overflow-y: auto;
-  background: #fff;
-  color: #000;
-  border: 1px solid #b8aeb3;
-  box-shadow: 3px 3px 0 #b8aeb3;
-  padding: 10px;
-  font-size: 13px;
-  line-height: 1.4;
-  position: absolute;
-  z-index: 10;
-  top: 125%;
-  left: 0;
-  transition: opacity 0.2s ease;
-}
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      width: 360px;
+      max-height: 260px;
+      overflow-y: auto;
+      background: #fff;
+      color: #000;
+      border: 1px solid #b8aeb3;
+      box-shadow: 3px 3px 0 #b8aeb3;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+      position: absolute;
+      z-index: 10;
+      top: 125%;
+      left: 0;
+      transition: opacity 0.2s ease;
+    }
 
-.tooltip:hover .tooltip-box,
-.tooltip .tooltip-box:hover {
-  visibility: visible;
-  opacity: 1;
-}
+    .tooltip:hover .tooltip-box,
+    .tooltip .tooltip-box:hover {
+      visibility: visible;
+      opacity: 1;
+    }
 
-.tooltip::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  height: 10px;
-}
+    /* small hover "bridge" so tooltip doesn't vanish when moving cursor */
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="window">
-    <div class="title-bar">Budget Planner</div>
+    <div class="title-bar">
+      Budget Planner
+      <button id="resetBtn" class="reset-btn" type="button">Reset</button>
+    </div>
 
     <div class="content">
       <div class="addons">
@@ -161,7 +181,7 @@
           <div>Enter Gross Pay:</div>
           <div class="money-inline">
             <span>$</span>
-            <input value="100,000" />
+            <input id="grossPay" value="100,000" />
           </div>
         </div>
 
@@ -215,7 +235,7 @@
           </div>
           <div class="money-inline">
             <span>$</span>
-            <input value="6,000" />
+            <input id="netIncome" value="6,000" />
           </div>
         </div>
 
@@ -236,6 +256,7 @@
   <script>
     const addons = document.querySelectorAll('.addon-btn');
     const dropzone = document.getElementById('dropzone');
+    const resetBtn = document.getElementById('resetBtn');
 
     addons.forEach(addon => {
       addon.addEventListener('dragstart', e => {
@@ -277,6 +298,14 @@
 
       const placeholder = dropzone.querySelector('.placeholder');
       if (placeholder) placeholder.remove();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      document.querySelectorAll('input').forEach(input => {
+        input.value = '';
+      });
+
+      dropzone.innerHTML = `<div class="placeholder">Drag add-ins here 👇</div>`;
     });
   </script>
 </body>
