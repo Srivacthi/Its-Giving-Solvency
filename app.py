@@ -7,8 +7,12 @@ def home():
     return render_template("budget.html")
 
 @app.route("/")
-def new_budget():
+def old_budget():
     return render_template("budget2.html")
+
+@app.route("/new")
+def new_budget():
+    return render_template("budget3.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
