@@ -249,6 +249,25 @@
         <div class="main" id="dropzone">
           <div class="placeholder">Drag add-ins here 👇</div>
         </div>
+        <div class="row" style="margin-top: 20px;">
+          <div><strong>Remaining After Expenses:</strong></div>
+          <div class="money-inline">
+            <span>$</span>
+            <input id="remainingBalance" readonly />
+          </div>
+        </div>
+
+        <button onclick="calculateRemaining()" style="
+          margin-top: 15px;
+          padding: 10px 16px;
+          font-family: inherit;
+          border: 1px solid #b8aeb3;
+          background: #fff;
+          cursor: pointer;
+        ">
+          Calculate Remaining Balance
+        </button>
+
       </div>
     </div>
   </div>
@@ -392,5 +411,32 @@
     calculateMonthlyNet();
   </script>
 
+  <!-- Calculated monthly remaining income after all monthly payments-->
+  <script>
+    function calculateRemaining() {
+      const monthlyNet = parseFloat(
+        document.getElementById("monthlyNet").value.replace(/,/g, "")
+      );
+
+      if (isNaN(monthlyNet)) return;
+
+      let totalExpenses = 0;
+
+      // Select all money inputs inside the dropzone
+      const expenseInputs = document.querySelectorAll(
+        "#dropzone .money-inline input"
+      );
+
+      expenseInputs.forEach(input => {
+        const value = parseFloat(input.value.replace(/,/g, ""));
+        if (!isNaN(value)) {
+          totalExpenses += value;
+        }
+      });
+
+      const remaining = monthlyNet - totalExpenses;
+      document.getElementById("remainingBalance").value = remaining.toFixed(2);
+    }
+  </script>
 </body>
 </html>
