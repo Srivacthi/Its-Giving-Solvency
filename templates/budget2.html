@@ -13,7 +13,7 @@
     }
 
     .window {
-      width: 910px;
+      width: 1000px;
       background: #f8eff2;
       border: 2px solid #b8aeb3;
       border-radius: 6px;
@@ -45,7 +45,7 @@
 
     .content {
       display: grid;
-      grid-template-columns: 210px 1fr;
+      grid-template-columns: 230px 1fr;
       gap: 20px;
       padding: 20px;
     }
@@ -53,7 +53,23 @@
     .addons {
       background: #eee4e8;
       padding: 15px;
+      padding-top: 3px;
       border: 1px solid #b8aeb3;
+      max-height: 550px;
+      overflow-y: auto;
+    }
+
+    .addons::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .addons::-webkit-scrollbar-thumb {
+      background: #c8c0c4;
+      border-radius: 6px;
+    }
+
+    .addons::-webkit-scrollbar-track {
+      background: transparent;
     }
 
     .addon-btn {
@@ -181,6 +197,7 @@
         <div class="addon-btn" draggable="true" data-name="🚗 Car expenses">🚗 Car expenses</div>
         <div class="addon-btn" draggable="true" data-name="💸 401k/RothIRA">💸 401k/RothIRA</div>
         <div class="addon-btn" draggable="true" data-name="🏦 Loan/Mortgage">🏦 Loan/Mortgage</div>
+        <div class="addon-btn" draggable="true" data-name="📈 Stocks">📈 Stocks</div>
         <div class="addon-btn" draggable="true" data-name="💊 Medical">💊 Medical</div>
         <div class="addon-btn" draggable="true" data-name="➕ Custom Expense">➕ Custom Expense</div>
       </div>
