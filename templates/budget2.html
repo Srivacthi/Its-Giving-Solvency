@@ -45,7 +45,7 @@
 
     .content {
       display: grid;
-      grid-template-columns: 200px 1fr;
+      grid-template-columns: 210px 1fr;
       gap: 20px;
       padding: 20px;
     }
@@ -82,9 +82,17 @@
       align-items: center;
     }
 
+    .row-heading {
+      display: grid;
+      grid-template-columns: 185px 55px 140px 1fr 35px;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
     .row-drag {
       display: grid;
-      grid-template-columns: 185px 45px 140px 1fr;
+      grid-template-columns: 185px 43px 142px 1fr 25px;
       gap: 10px;
       margin-bottom: 10px;
       align-items: center;
@@ -172,13 +180,14 @@
         <div class="addon-btn" draggable="true" data-name="💧 Utilities">💧 Utilities</div>
         <div class="addon-btn" draggable="true" data-name="🚗 Car expenses">🚗 Car expenses</div>
         <div class="addon-btn" draggable="true" data-name="💸 401k/RothIRA">💸 401k/RothIRA</div>
-        <div class="addon-btn" draggable="true" data-name="🏦 Loan / Mortgage">🏦 Loan / Mortgage</div>
+        <div class="addon-btn" draggable="true" data-name="🏦 Loan/Mortgage">🏦 Loan/Mortgage</div>
+        <div class="addon-btn" draggable="true" data-name="💊 Medical">💊 Medical</div>
         <div class="addon-btn" draggable="true" data-name="➕ Custom Expense">➕ Custom Expense</div>
       </div>
 
       <div class="small-padding">
         <div class="row">
-          <div>Enter Gross Pay:</div>
+          <div style = "font-weight:bold;">Enter Gross Pay:</div>
           <div class="money-inline">
             <span>$</span>
             <input id="grossPay" value="100,000" />
@@ -186,7 +195,7 @@
         </div>
 
         <div class="row">
-          <div>
+          <div style = "font-weight:bold;">
             Monthly Net Income:
             <span class="tooltip">ⓘ
               <div class="tooltip-box">
@@ -235,15 +244,16 @@
           </div>
           <div class="money-inline">
             <span>$</span>
-            <input id="monthlyNet" readonly />
+            <input id="monthlyNet" readonly style="background:#ededed;"/>
           </div>
         </div>
 
-        <div class="row-drag" style="font-weight:bold; margin-bottom:8px;">
+        <div class="row-heading" style="margin-bottom:8px;">
           <div>Monthly Expenses</div>
           <div></div>
           <div>Monthly Cost</div>
           <div>Comments</div>
+          <div>🗑️</div>
         </div>
 
         <div class="main" id="dropzone">
@@ -253,7 +263,7 @@
           <div><strong>Remaining After Expenses:</strong></div>
           <div class="money-inline">
             <span>$</span>
-            <input id="remainingBalance" readonly />
+            <input id="remainingBalance" readonly style="background:#ededed;"/>
           </div>
         </div>
 
@@ -311,7 +321,19 @@
           <input placeholder="1,000" />
         </div>
         <input placeholder="${notesPlaceholder}" />
+        <button class="delete-btn" type="button">✖</button>
       `;
+
+      // individual add ins deletion
+      const deleteBtn = row.querySelector(".delete-btn");
+      deleteBtn.addEventListener("click", () => {
+        row.remove();
+
+        // If no rows left, bring back placeholder
+        if (!dropzone.querySelector(".row-drag")) {
+          dropzone.innerHTML = `<div class="placeholder">Drag add-ins here 👇</div>`;
+        }
+      });
 
       dropzone.appendChild(row);
 
