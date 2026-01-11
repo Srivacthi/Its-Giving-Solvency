@@ -212,6 +212,18 @@
           </div>
         </div>
 
+      <div id="errorBox" style="
+        display:none;
+        margin-bottom:12px;
+        padding:10px;
+        border:1px solid #b33;
+        background:#ffecec;
+        color:#900;
+        font-size:14px;
+      ">
+      </div>
+
+
         <div class="row">
           <div style = "font-weight:bold;">
             Monthly Net Income:
@@ -301,6 +313,42 @@
   </div>
 
   <script>
+  function showError(msg) {
+    const box = document.getElementById("errorBox");
+    box.innerText = msg;
+    box.style.display = "block";
+  }
+
+  function clearError() {
+    const box = document.getElementById("errorBox");
+    box.innerText = "";
+    box.style.display = "none";
+  }
+
+  function parseMoney(value) {
+    if (!value) {
+      return { valid: false, reason: "empty" };
+    }
+
+    const cleaned = value.replace(/,/g, "").trim();
+
+    // Not a number at all
+    if (!/^\d+(\.\d+)?$/.test(cleaned)) {
+      return { valid: false, reason: "not_number" };
+    }
+
+    // Too many decimals
+    if (!/^\d+(\.\d{1,2})?$/.test(cleaned)) {
+      return { valid: false, reason: "too_many_decimals" };
+    }
+
+  return { valid: true, value: Number(cleaned) };
+}
+
+
+</script>
+
+  <script>
     const addons = document.querySelectorAll('.addon-btn');
     const dropzone = document.getElementById('dropzone');
     const resetBtn = document.getElementById('resetBtn');
@@ -341,6 +389,20 @@
         <input placeholder="${notesPlaceholder}" />
         <button class="delete-btn" type="button">✖</button>
       `;
+
+      // INLINE VALIDATION FOR EXPENSE INPUT
+      const moneyInput = row.querySelector(".money-inline input");
+
+      moneyInput.addEventListener("input", () => {
+        const value = parseMoney(moneyInput.value);
+
+        if (isNaN(value) || value < 0) {
+          moneyInput.style.borderColor = "#b33";
+        } else {
+          moneyInput.style.borderColor = "#b8aeb3";
+        }
+      });
+
 
       // individual add ins deletion
       const deleteBtn = row.querySelector(".delete-btn");
@@ -428,55 +490,94 @@
     }
 
     function calculateMonthlyNet() {
-      const gross = parseFloat(grossInput.value.replace(/,/g, ""));
+      clearError();
 
-      if (!isNaN(gross)) {
-        const STANDARD_DEDUCTION = 14600;
+      const result = parseMoney(grossInput.value);
 
-        const federalTaxableIncome = Math.max(0, gross - STANDARD_DEDUCTION);
-        const federalTax = calculateFederalTax(federalTaxableIncome);
-        const vaTax = calculateVirginiaTax(gross);
-        const ficaTax = calculateFICA(gross);
-
-        const netAnnual = gross - (federalTax + vaTax + ficaTax);
-        const monthlyNet = netAnnual / 12;
-
-        monthlyNetInput.value = monthlyNet.toFixed(2);
-      } else {
+      if (!result.valid) {
+        if (result.reason === "not_number") {
+          showError("Gross pay must be a number.");
+        } else if (result.reason === "too_many_decimals") {
+          showError("Gross pay can have at most 2 decimal places.");
+        }
         monthlyNetInput.value = "";
+        return;
       }
+
+      const gross = result.value;
+
+      if (gross <= 0) {
+        showError("Gross pay must be greater than $0.");
+        monthlyNetInput.value = "";
+        return;
+      }
+
+      const STANDARD_DEDUCTION = 14600;
+
+      const federalTaxableIncome = Math.max(0, gross - STANDARD_DEDUCTION);
+      const federalTax = calculateFederalTax(federalTaxableIncome);
+      const vaTax = calculateVirginiaTax(gross);
+      const ficaTax = calculateFICA(gross);
+
+      const netAnnual = gross - (federalTax + vaTax + ficaTax);
+      const monthlyNet = netAnnual / 12;
+
+      monthlyNetInput.value = monthlyNet.toFixed(2);
     }
 
-    grossInput.addEventListener("input", calculateMonthlyNet);
-    calculateMonthlyNet();
+
+
+    grossInput.addEventListener("input", () => {
+      clearError();
+      calculateMonthlyNet();
+});
+
   </script>
 
   <!-- Calculated monthly remaining income after all monthly payments-->
   <script>
-    function calculateRemaining() {
-      const monthlyNet = parseFloat(
-        document.getElementById("monthlyNet").value.replace(/,/g, "")
-      );
+  function calculateRemaining() {
+    clearError();
 
-      if (isNaN(monthlyNet)) return;
+    const monthlyNet = parseMoney(
+      document.getElementById("monthlyNet").value
+    );
 
-      let totalExpenses = 0;
-
-      // Select all money inputs inside the dropzone
-      const expenseInputs = document.querySelectorAll(
-        "#dropzone .money-inline input"
-      );
-
-      expenseInputs.forEach(input => {
-        const value = parseFloat(input.value.replace(/,/g, ""));
-        if (!isNaN(value)) {
-          totalExpenses += value;
-        }
-      });
-
-      const remaining = monthlyNet - totalExpenses;
-      document.getElementById("remainingBalance").value = remaining.toFixed(2);
+    if (isNaN(monthlyNet)) {
+      showError("Monthly net income is invalid.");
+      return;
     }
+
+    let totalExpenses = 0;
+
+    const expenseInputs = document.querySelectorAll(
+      "#dropzone .money-inline input"
+    );
+
+    for (const input of expenseInputs) {
+      const value = parseMoney(input.value);
+
+      if (isNaN(value)) {
+        showError("All expense fields must contain valid numbers.");
+        return;
+      }
+
+      if (value < 0) {
+        showError("Expenses cannot be negative.");
+        return;
+      }
+
+      totalExpenses += value;
+    }
+
+    if (totalExpenses > monthlyNet) {
+      showError("Your expenses exceed your monthly net income.");
+    }
+
+    const remaining = monthlyNet - totalExpenses;
+    document.getElementById("remainingBalance").value = remaining.toFixed(2);
+  }
+
   </script>
 </body>
 </html>
