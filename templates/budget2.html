@@ -539,15 +539,16 @@
   function calculateRemaining() {
     clearError();
 
-    const monthlyNet = parseMoney(
+    const netResult = parseMoney(
       document.getElementById("monthlyNet").value
     );
 
-    if (isNaN(monthlyNet)) {
+    if (!netResult.valid) {
       showError("Monthly net income is invalid.");
       return;
     }
 
+    const monthlyNet = netResult.value;
     let totalExpenses = 0;
 
     const expenseInputs = document.querySelectorAll(
@@ -555,19 +556,23 @@
     );
 
     for (const input of expenseInputs) {
-      const value = parseMoney(input.value);
+      const result = parseMoney(input.value);
 
-      if (isNaN(value)) {
+      if (!result.valid) {
         showError("All expense fields must contain valid numbers.");
         return;
       }
 
-      if (value < 0) {
+      if (result.value < 0) {
         showError("Expenses cannot be negative.");
         return;
       }
 
-      totalExpenses += value;
+      totalExpenses += result.value;
+    }
+    
+    for (const input of expenseInputs) {
+      input.style.borderColor = "#b8aeb3";
     }
 
     if (totalExpenses > monthlyNet) {
@@ -577,6 +582,7 @@
     const remaining = monthlyNet - totalExpenses;
     document.getElementById("remainingBalance").value = remaining.toFixed(2);
   }
+
 
   </script>
 </body>
